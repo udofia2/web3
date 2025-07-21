@@ -1,0 +1,12 @@
+model User {
+  id        String   @id @default(cuid())
+  authId    String   @unique @map("authid")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  KYC       KYC[]
+  Address   Address? @relation(fields: [addressId], references: [id])
+  addressId String?
+  auth      Auth     @relation(fields: [authId], references: [id])
+
+  @@map("users")
+}

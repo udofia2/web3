@@ -1,0 +1,58 @@
+model KYC {
+  id        String    @id @default(cuid())
+  userId    String
+  status    KYCStatus
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("kyc")
+}
+
+model KYB {
+  id         String    @id @default(cuid())
+  businessId String
+  status     KYBStatus
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@map("kyb")
+}
+
+model Address {
+  id         String           @id @default(cuid())
+  ownerId    String
+  ownerType  AddressOwnerType
+  street     String
+  city       String
+  state      String
+  country    String
+  postalCode String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  User       User[]
+  Business   Business[]
+
+  @@unique([ownerId, ownerType])
+  @@map("addresses")
+}
+
+enum AddressOwnerType {
+  USER
+  BUSINESS
+}
+
+enum KYBStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum KYCStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
