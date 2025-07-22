@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 // import { expressjwt } from 'express-jwt';
 // import logger from './logger';
-import { IattachTokenToResponse, IJWTPayload, IRefreshToken } from '../constants/interface';
+import { IattachTokenToResponse, IJWTPayload, IRefreshToken } from '../entities/constants';
 import * as errorHandler from '../errors';
 const secret = fs.readFileSync(path.join(__dirname, '../../.certs/private-key.pem'));
 const publicKey = fs.readFileSync(path.join(__dirname, '../../.certs/public-key.pem'));

@@ -1,9 +1,8 @@
 model Auth {
   id                String         @id @default(cuid())
   email             String         @unique
-  phone             String?        @unique
   password          String
-  pin               String
+  pin               String         @default("0000")
   isDeleted         Boolean        @default(false)
   emailVerified     Boolean        @default(false)
   passwordAttempets Int            @default(0)
@@ -32,12 +31,11 @@ model AuthSession {
 }
 
 model AuthSettings {
-  id         String  @id @default(cuid())
-  authId     String  @map("authid")
-  mfaEnabled Boolean @default(true)
-  mfaType    mfaType @default(EMAIL)
-  mfaSecret  String?
-
+  id            String   @id @default(cuid())
+  authId        String   @map("authid")
+  mfaEnabled    Boolean  @default(true)
+  mfaType       mfaType  @default(EMAIL)
+  mfaSecret     String?
   notifications Boolean  @default(true)
   darkMode      Boolean  @default(false)
   createdAt     DateTime @default(now())
@@ -62,6 +60,7 @@ enum authStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
+  RESTRICTED
 }
 
 enum authChannel {

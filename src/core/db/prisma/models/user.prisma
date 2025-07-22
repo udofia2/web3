@@ -9,9 +9,8 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   KYC         KYC[]
-  Address     Address? @relation(fields: [addressId], references: [id])
   addressId   String?
   auth        Auth     @relation(fields: [authId], references: [id])
 
-  @@map("users")
+  @@map("user")
 }

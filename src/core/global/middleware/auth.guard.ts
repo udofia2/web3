@@ -4,11 +4,11 @@ import * as errorHandler from "../errors";
 import {isTokenValid} from "../utils/jwtHandler";
 import { Response, NextFunction} from "express";
 import { IJWTPayload, Request } from "../entities/constants"
-import { Auth as AuthShema, prisma } from "../../db";
+import {Auth as AuthShema, authStatus, prisma} from "../../db";
 import crypto from 'crypto';
 import logger from "../utils/logger";
 import { comparePassword } from "../utils/generate.encryption.key";
-import { Role } from "@prisma/client";
+
 
 export class Auth {
 
@@ -18,14 +18,16 @@ export class Auth {
                 id
             },
             include: {
-                user: true,
-                session: true
+                User: true,
+
+                authSession: true
             }
         })
 
         if(!auth) throw new errorHandler.NotFoundError("User not found");
-        if(auth.is_blocked) throw new errorHandler.UnauthorizedError("Account suspended please contact support");
-        if(auth.is_deleted) throw new errorHandler.UnauthorizedError("Account deleted please contact support ");
+        if(auth.status === authStatus.SUSPENDED || auth.status === authStatus.RESTRICTED ) throw new errorHandler.UnauthorizedError("Account suspended please contact support");
+        if(auth.status === authStatus.INACTIVE ) throw new errorHandler.UnauthorizedError("account is inactive please reset password");
+        if(auth.isDeleted) throw new errorHandler.UnauthorizedError("Account deleted please contact support");
         return auth as unknown as AuthShema;
     };
 
@@ -40,31 +42,48 @@ export class Auth {
                 token = req.signedCookies.token;
             }
 
+            const clientHeader = req.headers['x-client-id'];
+            if (clientHeader && typeof clientHeader === 'string') {
+                clientid = clientHeader;
+            } else if (req.signedCookies?.clientid) {
+                clientid = req.signedCookies.clientid;
+            }
+
             if (!token) throw new errorHandler.UnauthenticatedError("Token not found in request");
             const payload: IJWTPayload | void = isTokenValid(token)
 
             if(payload){
                 const userdata = await Auth.getUserData(payload.authid);
-                payload.userid = userdata?.user?.id
-                req.user = payload;
+                req.user = {
+                    authid: payload.authid,
+                    userid: userdata?.user.id,
+                    email: userdata?.user.email
+                };
+
+                if(clientHeader){
+                    req.business = {
+                        clientid
+                    }
+                }
+
             }
             next();
 
     }
 
-    public static async isAdmin(req: Request, res: Response, next: NextFunction) {
-        try {
-            const auth = await Auth.getUserData(req.user.authid)
-            if (auth?.user?.role === Role.ADMIN || auth?.user?.role === Role.SUPER_ADMIN) {
-                return next();
-            }
-
-            throw new errorHandler.UnauthorizedError("You are not authorized to perform this action");
-        }
-        catch (err) {
-            next(err); // Use next to pass error to error middleware
-        }
-    }
+    // public static async isAdmin(req: Request, res: handler, next: NextFunction) {
+    //     try {
+    //         const auth = await Auth.getUserData(req.user.authid)
+    //         if (auth?.user?.role === Role.ADMIN || auth?.user?.role === Role.SUPER_ADMIN) {
+    //             return next();
+    //         }
+    //
+    //         throw new errorHandler.UnauthorizedError("You are not authorized to perform this action");
+    //     }
+    //     catch (err) {
+    //         next(err); // Use next to pass error to error middleware
+    //     }
+    // }
 
     public static async validateRefreshToken(req: Request, res: Response, next: NextFunction){
         if(!req.signedCookies?.refresh_token)
@@ -73,8 +92,11 @@ export class Auth {
         const payload = isTokenValid(refreshToken)
         if(payload){
             const userdata = await Auth.getUserData(payload.authid);
-            payload.userid = userdata?.user?.id
-            req.user = payload;
+            req.user = {
+                authid: payload.authid,
+                userid: userdata?.user.id,
+                email: userdata?.user.email
+            }
         }
         next();
     }

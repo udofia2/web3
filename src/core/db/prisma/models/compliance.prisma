@@ -11,38 +11,57 @@ model KYC {
 }
 
 model KYB {
-  id         String    @id @default(cuid())
-  businessId String
-  status     KYBStatus
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  business Business @relation(fields: [businessId], references: [id])
+  id                 String         @id @default(cuid())
+  businessId         String         @unique
+  submittedBy        String
+  legalBusinessName  String
+  businessType       String
+  registrationNumber String?
+  natureOfBusiness   String?
+  taxId              String?
+  country            String
+  status             KYBStatus
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  business           Business?      @relation(fields: [businessId], references: [id])
+  Address            Address?
+  KYBDirectors       KYBDirectors[]
 
   @@map("kyb")
 }
 
+model KYBDirectors {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  kybId       String
+  firstName   String
+  lastName    String
+  otherNames  String?
+  phoneNumber String?
+  title       String?
+  position    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  kyb         KYB      @relation(fields: [kybId], references: [id])
+
+  @@map("kyb_directors")
+}
+
 model Address {
-  id         String           @id @default(cuid())
-  ownerId    String
-  ownerType  AddressOwnerType
+  id         String    @id @default(cuid())
+  kybId      String    @unique
   street     String
   city       String
   state      String
   country    String
   postalCode String
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
-  User       User[]
-  Business   Business[]
-
-  @@unique([ownerId, ownerType])
-  @@map("addresses")
-}
-
-enum AddressOwnerType {
-  USER
-  BUSINESS
+  isVerified Boolean   @default(false)
+  verifiedBy String?
+  verifiedAt DateTime?
+  notes      String?   @db.Text
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  kyb        KYB?      @relation(fields: [kybId], references: [id])
 }
 
 enum KYBStatus {

@@ -9,18 +9,18 @@
     "build": "tsc -p .",
     "postbuild": "ts-node scripts/copy-assets",
     "db:migrate": "npx prisma migrate deploy --schema=./src/core/db/prisma",
-    "db:generate": "npx prisma generate --schema=./src/core/db/prisma",
+    "db:generate": "npx prisma generate --schema=./src/core/db/prisma --no-engine",
     "db:push": "npx prisma db push --schema=./src/core/db/prisma --skip-generate",
     "db:studio": "npx prisma studio --schema=./src/core/db/prisma --port 5556",
-    "dev": "npm run with-dev-env nodemon ./src/Bootstraps.ts",
+    "dev": "nodemon -r tsconfig-paths/register ./src/Bootstraps.ts",
     "with-dev-env": "dotenv -e .env --",
-    "setup": "node ./src/core/cli/setup.mjs make:certs ./dist/core/.certs",
-    "setup:dev": "node ./src/core/cli/setup.mjs make:certs ./src/core/.certs"
+    "setup": "node scripts/setup.mjs make:certs ./dist/core/.certs",
+    "setup:dev": "node scripts/setup.mjs make:certs ./src/core/.certs"
   },
   "_moduleAliases": {
     "@": "./src",
     "@core": "./src/core",
-    "@modules": "./src/modules",
+    "@modules": "./src/Modules",
     "@utils": "./src/utils",
     "@types": "./src/types",
     "@config": "./src/config",

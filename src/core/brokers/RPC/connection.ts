@@ -14,7 +14,10 @@ export const getChannel = async (): Promise<Channel | any> => {
         };
     } else {
         if (!AMQ_CONNECTION) {
-            AMQ_CONNECTION = await connect(process.env.AMPQ_SERVER!);
+            AMQ_CONNECTION = await connect(process.env.AMPQ_SERVER!).catch(error => {
+                console.error('Failed to connect to AMQP server:', error);
+                throw new Error('AMQP connection failed');
+            })
         }
         return await AMQ_CONNECTION.createChannel();
     }

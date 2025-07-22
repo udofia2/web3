@@ -5,6 +5,12 @@ export enum BusinessRPC {
     // TODO: add UPDATE_BUSINESS and DELETE_BUSINESS
 }
 
+export enum AuthRPC {
+    LOGIN = "LOGIN",
+    SIGNUP = "SIGNUP",
+    UPGRADE_ACCOUNT = "UPGRADE_ACCOUNT",
+}
+
 export enum UserRPC {
     GET_USER_BY_ID = "GET_USER_BY_ID",
     GET_USER_BY_EMAIL = "GET_USER_BY_EMAIL",
