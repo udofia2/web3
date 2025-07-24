@@ -7,7 +7,7 @@ import {validateSchema} from "@core/global/config/validation.config";
 import {AuthController} from "@/Modules/Auth/controller/auth.controller";
 
 //Setting up the RPC observer for the AuthService
-RPCObserver("auth", AuthService);
+RPCObserver("business", AuthService);
 
 const router: Router = ExpressRouter();
 

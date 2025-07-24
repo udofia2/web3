@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { randomUUID } from 'crypto';
-import RedisManager from '../../database/redis';
+import RedisManager from '@/core/db/redis';
 import {AESCrypto} from './eas.standard'
 
 
