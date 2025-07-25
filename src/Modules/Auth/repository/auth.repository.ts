@@ -26,6 +26,19 @@ class AuthRepository implements IAuthRepository{
             }
         }) as Auth;
     }
+
+
+    public async updatePassword(authId: string, hashedPassword: string): Promise<Auth> {
+        return await prisma.auth.update({
+            where: {
+                id: authId
+            },
+            data: {
+                password: hashedPassword,
+                updatedAt: new Date()
+            }
+        }) as Auth;
+    }
 }
 
 export default AuthRepository.getInstance()
