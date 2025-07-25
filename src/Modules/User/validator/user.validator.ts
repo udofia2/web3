@@ -8,7 +8,7 @@ export class UserValidator {
         phoneNumber: z.string().trim().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format").optional(),
         title: z.string().trim().max(20, "Title too long").optional(),
     }).refine((data) => {
-        // At least one field must be provided
+ 
         return Object.values(data).some(value => value !== undefined && value !== "");
     }, {
         message: "At least one field must be provided for update"

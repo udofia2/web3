@@ -27,4 +27,6 @@ export interface changePasswordDto {
 export interface IAuthRepository {
     findById(id: string): Promise<any>;
     findByEmail(email: string): Promise<any>;
+    updatePassword(authId: string, hashedNewPassword: string): Promise<any>;
+    
 }

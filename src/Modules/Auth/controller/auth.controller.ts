@@ -18,7 +18,8 @@ export class AuthController {
 
     public static async changePassword(req: Request, res: Response) {
         const payload: changePasswordDto = req.body;
-        const authId = req.user.authid;
+        const authId = "req.user.authid";
+        // const authId = req.user.authid;
         const response = await AuthService.changePassword(payload, authId);
         res.status(StatusCodes.OK).json(response);
     }

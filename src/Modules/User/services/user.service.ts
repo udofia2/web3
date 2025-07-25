@@ -19,16 +19,16 @@ class UserService implements IUserService {
 
     public async updateProfile(payload: updateProfileDto, userId: string): Promise<ApiResponse> {
         try {
-            // Check if user exists
+
             const existingUser = await this.repository.findById(userId);
             if (!existingUser) {
                 throw new NotFoundError("User not found");
             }
 
-            // Update user profile
+   
             const updatedUser = await this.repository.updateProfile(userId, payload);
 
-            // Return updated profile (excluding sensitive data)
+
             const { authId, ...userProfile } = updatedUser;
 
             return ResponseHandler.success(

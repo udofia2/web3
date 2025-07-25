@@ -7,19 +7,19 @@ import {validateSchema} from "@core/global/config/validation.config";
 import {UserController} from "@/Modules/User/controller/user.controller"
 import {Auth} from "@core/global/middleware/auth.guard";
 
-//Setting up the RPC observer for the UserService
+
 RPCObserver("user", UserService);
 
 const router: Router = ExpressRouter();
 
-// Protected routes (authentication required)
+
 router.route("/profile")
     .put([
-        use(Auth.guard), // Require authentication
+        use(Auth.guard), 
         validateSchema(UserValidator.updateProfileSchema)
     ], use(UserController.updateProfile))
     .patch([
-        use(Auth.guard), // Require authentication  
+        use(Auth.guard), 
         validateSchema(UserValidator.updateProfileSchema)
     ], use(UserController.updateProfile));
 
