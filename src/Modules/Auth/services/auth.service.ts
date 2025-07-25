@@ -46,7 +46,7 @@ class AuthService implements IAuthService {
                 case AuthRPC.LOGIN:
                     const {email, password} = data;
                     if (!email || !password) {
-                        throw new CustomError("Email and password are required", 400);
+                        throw new CustomError("Email and password are required");
                     }
                     return await this.login({email, password});
                 default:
