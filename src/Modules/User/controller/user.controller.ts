@@ -11,4 +11,11 @@ export class UserController {
         const response = await UserService.updateProfile(payload, userId);
         res.status(StatusCodes.OK).json(response);
     }
+
+    public static async getUserProfile(req: Request, res: Response) {
+        const userId = "req.user.userid";
+        // const userId = req.user.userid;
+        const response = await UserService.getUserProfile(userId);
+        res.status(StatusCodes.OK).json(response);
+    }
 }

@@ -14,6 +14,9 @@ const router: Router = ExpressRouter();
 
 
 router.route("/profile")
+    .get([
+        use(Auth.guard)
+    ], use(UserController.getUserProfile))
     .put([
         use(Auth.guard), 
         validateSchema(UserValidator.updateProfileSchema)

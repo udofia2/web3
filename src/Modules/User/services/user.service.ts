@@ -1,5 +1,5 @@
 import {CustomError, NotFoundError} from "@core/global/errors";
-import {IUserRepository, IUserService, updateProfileDto} from "../entity/user.entity";
+import {IUserRepository, IUserService, updateProfileDto, UserProfileDto} from "../entity/user.entity";
 import {UserRPC} from "@core/brokers/RPC/rpc.interface";
 import {ApiResponse, ResponseHandler} from "@core/handler/response.handler";
 import UserRepository from "@/Modules/User/repository/user.repository";
@@ -15,6 +15,44 @@ class UserService implements IUserService {
             UserService.instance = new UserService();
         }
         return UserService.instance;
+    }
+
+    public async getUserProfile(userId: string): Promise<ApiResponse> {
+        try {
+            const userWithAuth = await this.repository.findByIdWithAuth(userId);
+            
+            if (!userWithAuth) {
+                throw new NotFoundError("User profile not found");
+            }
+
+            // Map the data to the expected profile format
+            const profileData: UserProfileDto = {
+                id: userWithAuth.id,
+                firstName: userWithAuth.firstName,
+                lastName: userWithAuth.lastName,
+                otherNames: userWithAuth.otherNames,
+                phoneNumber: userWithAuth.phoneNumber,
+                title: userWithAuth.title,
+                email: userWithAuth.auth.email,
+                emailVerified: userWithAuth.auth.emailVerified,
+                status: userWithAuth.auth.status,
+                authLevel: userWithAuth.auth.authLevel,
+                createdAt: userWithAuth.createdAt,
+                updatedAt: userWithAuth.updatedAt
+            };
+
+            return ResponseHandler.success(
+                profileData,
+                "00",
+                "User profile retrieved successfully"
+            );
+
+        } catch (error: any) {
+            if (error instanceof NotFoundError) {
+                throw error;
+            }
+            throw new CustomError("Failed to retrieve user profile");
+        }
     }
 
     public async updateProfile(payload: updateProfileDto, userId: string): Promise<ApiResponse> {

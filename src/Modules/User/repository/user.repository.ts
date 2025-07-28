@@ -19,6 +19,25 @@ class UserRepository implements IUserRepository{
         }) as User;
     }
 
+    public async findByIdWithAuth(id: string): Promise<any> {
+        return await prisma.user.findUnique({
+            where: {
+                id
+            },
+            include: {
+                auth: {
+                    select: {
+                        email: true,
+                        emailVerified: true,
+                        status: true,
+                        authLevel: true,
+                        createdAt: true
+                    }
+                }
+            }
+        });
+    }
+    
     public async updateProfile(userId: string, data: updateProfileDto): Promise<User> {
         return await prisma.user.update({
             where: {
