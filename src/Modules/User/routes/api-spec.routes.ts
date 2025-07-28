@@ -1,4 +1,4 @@
-// ::::::::::::::::::::::::: Update Profile Docs :::::::::::::::::::::::::
+// ::::::::::::::::::::::::: User Profile Management Docs :::::::::::::::::::::::::
 /**
  * @swagger
  * /user/profile:
@@ -229,93 +229,4 @@
  *                 message:
  *                   type: string
  *                   example: "Something went wrong"
- *   patch:
- *     summary: Update user profile
- *     description: Partially updates the authenticated user's profile information. Same functionality as PUT but semantically indicates partial update.
- *     tags:
- *       - User Management
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               firstName:
- *                 type: string
- *                 minLength: 2
- *                 maxLength: 50
- *                 description: User's first name
- *               lastName:
- *                 type: string
- *                 minLength: 2
- *                 maxLength: 50
- *                 description: User's last name
- *               otherNames:
- *                 type: string
- *                 maxLength: 100
- *                 description: User's other names (optional)
- *               phoneNumber:
- *                 type: string
- *                 pattern: '^\+?[1-9]\d{1,14}$'
- *                 description: User's phone number in international format
- *               title:
- *                 type: string
- *                 maxLength: 20
- *                 description: User's title (Mr., Mrs., Dr., etc.)
- *             minProperties: 1
- *             additionalProperties: false
- *           example:
- *             title: "Ms."
- *             phoneNumber: "+1987654321"
- *     responses:
- *       200:
- *         description: Profile updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: boolean
- *                   example: true
- *                 responseCode:
- *                   type: string
- *                   example: "00"
- *                 message:
- *                   type: string
- *                   example: "Profile updated successfully"
- *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                     firstName:
- *                       type: string
- *                     lastName:
- *                       type: string
- *                     otherNames:
- *                       type: string
- *                       nullable: true
- *                     phoneNumber:
- *                       type: string
- *                       nullable: true
- *                     title:
- *                       type: string
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *       400:
- *         description: Bad request - Validation errors
- *       401:
- *         description: Unauthorized - Invalid or missing token
- *       404:
- *         description: User not found
- *       500:
- *         description: Internal server error
  */
