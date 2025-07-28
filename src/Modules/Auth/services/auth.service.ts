@@ -1,10 +1,10 @@
 import {CustomError, NotFoundError, UnauthorizedError} from "@core/global/errors";
 import {changePasswordDto, IAuthRepository, IAuthService, loginDto, resgisterDto} from "../entity/auth.entity";
-import {AuthRPC} from "@core/brokers/RPC/rpc.interface";
+import {AuthRPC, BusinessRPC} from "@core/brokers/RPC/rpc.interface";
 import {ApiResponse, ResponseHandler} from "@core/handler/response.handler";
 import AuthRepository from "@/Modules/Auth/repository/auth.repository";
 import { comparePassword, encryptPassword } from "@/core/global/utils/generate.encryption.key";
-
+import {RPCRequest} from "@core/brokers/RPC/rpc.request";
 
 class AuthService implements IAuthService {
     private readonly repository: IAuthRepository = AuthRepository;
@@ -26,6 +26,13 @@ class AuthService implements IAuthService {
     }
 
     public async register(payload: resgisterDto): Promise<ApiResponse> {
+        const userdata = RPCRequest("business", {
+            type: BusinessRPC.CREATE_BUSINESS,
+            data: {
+                email: payload.email,
+                password: payload.password
+            }
+        })
         throw new Error("Method not implemented.");
     }
 
@@ -71,6 +78,12 @@ class AuthService implements IAuthService {
             switch (type) {
                 case AuthRPC.UPGRADE_ACCOUNT:
                     return await this.repository.findById(data.id);
+                case AuthRPC.LOGIN:
+                    const {email, password} = data;
+                    if (!email || !password) {
+                        throw new CustomError("Email and password are required");
+                    }
+                    return await this.login({email, password});
                 default:
                     return null;
             }

@@ -1,9 +1,5 @@
 
-export enum BusinessRPC {
-    GET_BUSINESS_DETAILS_BY_ID="GET_BUSINESS_DETAILS_BY_ID",
-    CREATE_BUSINESS="CREATE_BUSINESS",
-    // TODO: add UPDATE_BUSINESS and DELETE_BUSINESS
-}
+
 
 export enum AuthRPC {
     LOGIN = "LOGIN",
@@ -36,4 +32,11 @@ export enum TransactionRPC {
     GET_TRANSACTION_BY_ACCOUNT_ID = "GET_TRANSACTION_BY_ACCOUNT_ID"
 }
 
-export type RPC_QUEUE_TYPE =  "auth" |  "user" | "account" | "security" | "compliance";
+export enum BusinessRPC {
+    GET_BUSINESS_BY_ID = "GET_BUSINESS_BY_ID",
+    CREATE_BUSINESS = "CREATE_BUSINESS",
+    UPDATE_BUSINESS = "UPDATE_BUSINESS",
+    DELETE_BUSINESS = "DELETE_BUSINESS",
+}
+
+export type RPC_QUEUE_TYPE =  "auth" |  "user" | "account" | "security" | "compliance" | "business" | "kyc" | "transaction";

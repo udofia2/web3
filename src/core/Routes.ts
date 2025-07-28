@@ -4,6 +4,7 @@ import {Auth} from "./global/middleware/auth.guard";
 import AuthRoutes from "../Modules/Auth/routes/auth.routes"
 import UserRoutes from "../Modules/User/routes/user.routes"
 
+import {SwaggerDocs} from "@core/swagger/docs.swagger";
 
 export class SetupRoutes {
     private static apiVersion: string = "v1";
@@ -13,6 +14,11 @@ export class SetupRoutes {
 
     public static init(app: Application): void {
         try {
+            // Initialize Swagger documentation
+            if(process.env.NODE_ENV !== "production") {
+                SwaggerDocs.init(app)
+            }
+
             app.use(`${SetupRoutes.apiPrefix}/auth`, AuthRoutes)
             app.use(`${SetupRoutes.apiPrefix}/user`, UserRoutes)
 
