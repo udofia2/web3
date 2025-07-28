@@ -1,8 +1,9 @@
-import {CustomError, NotFoundError} from "@core/global/errors";
-import {IUserRepository, IUserService, updateProfileDto, UserProfileDto} from "../entity/user.entity";
+import {CustomError, NotFoundError, UnauthorizedError} from "@core/global/errors";
+import {changePasswordDto, IUserRepository, IUserService, updateProfileDto, UserProfileDto} from "../entity/user.entity";
 import {UserRPC} from "@core/brokers/RPC/rpc.interface";
 import {ApiResponse, ResponseHandler} from "@core/handler/response.handler";
 import UserRepository from "@/Modules/User/repository/user.repository";
+import { comparePassword, encryptPassword } from "@/core/global/utils/generate.encryption.key";
 
 class UserService implements IUserService {
     private readonly repository: IUserRepository = UserRepository;
@@ -80,6 +81,41 @@ class UserService implements IUserService {
                 throw error;
             }
             throw new CustomError("Failed to update profile");
+        }
+    }
+
+
+    public async changePassword(payload: changePasswordDto, authId: string): Promise<ApiResponse> {
+        try {
+            
+            const authRecord = await this.repository.findById(authId);
+            if (!authRecord) {
+                throw new NotFoundError("User not found");
+            }
+
+            
+            const isOldPasswordValid = await comparePassword(payload.oldPassword, authRecord.password);
+            if (!isOldPasswordValid) {
+                throw new UnauthorizedError("Old password is incorrect");
+            }
+
+            
+            const hashedNewPassword = await encryptPassword(payload.newPassword);
+
+            
+            await this.repository.updatePassword(authId, hashedNewPassword);
+
+            return ResponseHandler.success(
+                null,
+                "00",
+                "Password updated successfully"
+            );
+
+        } catch (error: any) {
+            if (error instanceof UnauthorizedError || error instanceof NotFoundError) {
+                throw error;
+            }
+            throw new CustomError("Failed to update password");
         }
     }
 

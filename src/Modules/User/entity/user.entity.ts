@@ -3,6 +3,7 @@ import {ApiResponse} from "@core/handler/response.handler";
 export interface IUserService {
     updateProfile(payload: updateProfileDto, userId: string): Promise<ApiResponse>;
     getUserProfile(userId: string): Promise<ApiResponse>;
+    changePassword(payload: changePasswordDto, userId: string): Promise<ApiResponse>;
 
 }
 
@@ -12,6 +13,13 @@ export interface updateProfileDto {
     otherNames?: string;
     phoneNumber?: string;
     title?: string;
+}
+
+
+export interface changePasswordDto {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
 }
 
 export interface UserProfileDto {
@@ -34,4 +42,6 @@ export interface IUserRepository {
     findById(id: string): Promise<any>;
     findByIdWithAuth(id: string): Promise<any>;
     updateProfile(userId: string, data: updateProfileDto): Promise<any>;
+    updatePassword(userId: string, hashedNewPassword: string): Promise<any>;
+
 }

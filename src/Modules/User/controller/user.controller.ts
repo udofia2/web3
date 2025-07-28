@@ -1,4 +1,4 @@
-import {updateProfileDto} from "@/Modules/User/entity/user.entity";
+import {changePasswordDto, updateProfileDto} from "@/Modules/User/entity/user.entity";
 import {StatusCodes} from "http-status-codes";
 import UserService from "@/Modules/User/services/user.service";
 import {Request, Response} from "express";
@@ -16,6 +16,14 @@ export class UserController {
         const userId = "req.user.userid";
         // const userId = req.user.userid;
         const response = await UserService.getUserProfile(userId);
+        res.status(StatusCodes.OK).json(response);
+    }
+
+    public static async changePassword(req: Request, res: Response) {
+        const payload: changePasswordDto = req.body;
+        const authId = "req.user.authid";
+        // const authId = req.user.authid;
+        const response = await UserService.changePassword(payload, authId);
         res.status(StatusCodes.OK).json(response);
     }
 }

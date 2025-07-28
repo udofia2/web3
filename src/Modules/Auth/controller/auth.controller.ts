@@ -1,4 +1,4 @@
-import {changePasswordDto, loginDto} from "@/Modules/Auth/entity/auth.entity";
+import {loginDto} from "@/Modules/Auth/entity/auth.entity";
 import {StatusCodes} from "http-status-codes";
 import AuthService from "@/Modules/Auth/services/auth.service";
 import {Request, Response} from "express";
@@ -16,11 +16,4 @@ export class AuthController {
         res.status(StatusCodes.CREATED).json(response);
     }
 
-    public static async changePassword(req: Request, res: Response) {
-        const payload: changePasswordDto = req.body;
-        const authId = "req.user.authid";
-        // const authId = req.user.authid;
-        const response = await AuthService.changePassword(payload, authId);
-        res.status(StatusCodes.OK).json(response);
-    }
 }

@@ -18,12 +18,6 @@ router.route("/login")
     .post([validateSchema(AuthValidator.loginSchema)], use(AuthController.login));
 
 
-router.route("/change-password")
-    .put([
-        throttle(5, 15),
-        use(Auth.guard),
-        validateSchema(AuthValidator.changePasswordSchema)
-    ], use(AuthController.changePassword));
 
 
 export default router;

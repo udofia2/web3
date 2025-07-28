@@ -37,7 +37,7 @@ class UserRepository implements IUserRepository{
             }
         });
     }
-    
+
     public async updateProfile(userId: string, data: updateProfileDto): Promise<User> {
         return await prisma.user.update({
             where: {
@@ -46,6 +46,25 @@ class UserRepository implements IUserRepository{
             data: {
                 ...data,
                 updatedAt: new Date()
+            }
+        }) as User;
+    }
+
+    public async updatePassword(userId: string, hashedPassword: string): Promise<User> {
+        return await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                auth: {
+                    update: {
+                        password: hashedPassword
+                    }
+                },
+                updatedAt: new Date()
+            },
+            include: {
+                auth: true
             }
         }) as User;
     }

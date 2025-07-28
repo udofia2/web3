@@ -6,6 +6,7 @@ import {UserValidator} from "@/Modules/User/validator/user.validator";
 import {validateSchema} from "@core/global/config/validation.config";
 import {UserController} from "@/Modules/User/controller/user.controller"
 import {Auth} from "@core/global/middleware/auth.guard";
+import { throttle } from "@/core/global/middleware/throttle.middleware";
 
 
 RPCObserver("user", UserService);
@@ -25,5 +26,13 @@ router.route("/profile")
         use(Auth.guard), 
         validateSchema(UserValidator.updateProfileSchema)
     ], use(UserController.updateProfile));
+
+    
+router.route("/change-password")
+    .put([
+        throttle(5, 15),
+        use(Auth.guard),
+        validateSchema(UserValidator.changePasswordSchema)
+    ], use(UserController.changePassword));
 
 export default router;
