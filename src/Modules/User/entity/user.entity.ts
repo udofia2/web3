@@ -4,9 +4,28 @@ export interface IUserService {
     updateProfile(payload: updateProfileDto, userId: string): Promise<ApiResponse>;
     getUserProfile(userId: string): Promise<ApiResponse>;
     changePassword(payload: changePasswordDto, userId: string): Promise<ApiResponse>;
+    setTransactionPin(payload: setTransactionPinDto, userId: string): Promise<ApiResponse>;
+    requestPinReset(payload: requestPinResetDto, userId: string): Promise<ApiResponse>;
+    verifyPinResetOtp(payload: verifyPinResetOtpDto): Promise<ApiResponse>;
+    resetTransactionPin(payload: resetTransactionPinDto): Promise<ApiResponse>;
 
 }
 
+
+export interface requestPinResetDto {
+    method: 'email' | 'sms';
+}
+
+export interface verifyPinResetOtpDto {
+    sessionId: string;
+    otp: string;
+}
+
+export interface resetTransactionPinDto {
+    sessionId: string;
+    newPin: string;
+    confirmPin: string;
+}
 export interface updateProfileDto {
     firstName?: string;
     lastName?: string;
@@ -15,6 +34,11 @@ export interface updateProfileDto {
     title?: string;
 }
 
+export interface setTransactionPinDto {
+    pin: string;
+    confirmPin: string;
+    password: string;
+}
 
 export interface changePasswordDto {
     oldPassword: string;
@@ -43,5 +67,6 @@ export interface IUserRepository {
     findByIdWithAuth(id: string): Promise<any>;
     updateProfile(userId: string, data: updateProfileDto): Promise<any>;
     updatePassword(userId: string, hashedNewPassword: string): Promise<any>;
+    updateTransactionPin(authId: string, hashedPin: string): Promise<any>;
 
 }

@@ -53,4 +53,29 @@ export class UserValidator {
       message: "New password must be different from old password",
       path: ["newPassword"],
     });
+
+    static setTransactionPinSchema = z
+        .object({
+            pin: z
+                .string({ message: "PIN is required" })
+                .trim()
+                .length(4, "PIN must be exactly 4 digits")
+                .regex(/^\d{4}$/, "PIN must contain only digits"),
+            confirmPin: z
+                .string({ message: "Confirm PIN is required" })
+                .trim()
+                .length(4, "Confirm PIN must be exactly 4 digits"),
+            password: z
+                .string({ message: "Current password is required" })
+                .trim()
+                .min(1, "Current password cannot be empty"),
+        })
+        .refine((data) => data.pin === data.confirmPin, {
+            message: "PIN and confirm PIN do not match",
+            path: ["confirmPin"],
+        })
+        .refine((data) => data.pin !== "0000", {
+            message: "PIN cannot be 0000",
+            path: ["pin"],
+        });
 }

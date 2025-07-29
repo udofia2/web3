@@ -35,4 +35,12 @@ router.route("/change-password")
         validateSchema(UserValidator.changePasswordSchema)
     ], use(UserController.changePassword));
 
+
+router.route("/set-transaction-pin")
+    .put([
+        throttle(3, 15), // More restrictive rate limiting for PIN
+        use(Auth.guard),
+        validateSchema(UserValidator.setTransactionPinSchema)
+    ], use(UserController.setTransactionPin));
+
 export default router;

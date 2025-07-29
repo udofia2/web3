@@ -142,3 +142,4 @@ vite.config.ts.timestamp-*
 foldS.md
 Q.md
 resources
+package-lock.json

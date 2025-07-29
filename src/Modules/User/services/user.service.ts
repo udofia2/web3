@@ -1,5 +1,5 @@
 import {CustomError, NotFoundError, UnauthorizedError} from "@core/global/errors";
-import {changePasswordDto, IUserRepository, IUserService, updateProfileDto, UserProfileDto} from "../entity/user.entity";
+import {changePasswordDto, IUserRepository, IUserService, setTransactionPinDto, updateProfileDto, UserProfileDto} from "../entity/user.entity";
 import {UserRPC} from "@core/brokers/RPC/rpc.interface";
 import {ApiResponse, ResponseHandler} from "@core/handler/response.handler";
 import UserRepository from "@/Modules/User/repository/user.repository";
@@ -119,6 +119,40 @@ class UserService implements IUserService {
         }
     }
 
+        public async setTransactionPin(payload: setTransactionPinDto, authId: string): Promise<ApiResponse> {
+        try {
+            
+            const userWithAuth = await this.repository.findByIdWithAuth(authId);
+            if (!userWithAuth) {
+                throw new NotFoundError("User not found");
+            }
+
+            
+            const isPasswordValid = await comparePassword(payload.password, userWithAuth.auth.password);
+            if (!isPasswordValid) {
+                throw new UnauthorizedError("Current password is incorrect");
+            }
+
+            
+            const hashedPin = await encryptPassword(payload.pin);
+
+            
+            await this.repository.updateTransactionPin(userWithAuth.auth.id, hashedPin);
+
+            return ResponseHandler.success(
+                null,
+                "00",
+                "Transaction PIN set successfully"
+            );
+
+        } catch (error: any) {
+            if (error instanceof UnauthorizedError || error instanceof NotFoundError) {
+                throw error;
+            }
+            throw new CustomError("Failed to set transaction PIN");
+        }
+    }
+    
     // RPC Handler
     async ServeRPCRequests(payload: any): Promise<any> {
         try {

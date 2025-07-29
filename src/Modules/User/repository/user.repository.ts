@@ -68,6 +68,18 @@ class UserRepository implements IUserRepository{
             }
         }) as User;
     }
+
+    public async updateTransactionPin(authId: string, hashedPin: string): Promise<any> {
+        return await prisma.auth.update({
+            where: {
+                id: authId
+            },
+            data: {
+                pin: hashedPin,
+                updatedAt: new Date()
+            }
+        });
+    }
 }
 
 export default UserRepository.getInstance()

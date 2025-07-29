@@ -1,4 +1,4 @@
-import {changePasswordDto, updateProfileDto} from "@/Modules/User/entity/user.entity";
+import {changePasswordDto, setTransactionPinDto, updateProfileDto} from "@/Modules/User/entity/user.entity";
 import {StatusCodes} from "http-status-codes";
 import UserService from "@/Modules/User/services/user.service";
 import {Request, Response} from "express";
@@ -24,6 +24,14 @@ export class UserController {
         const authId = "req.user.authid";
         // const authId = req.user.authid;
         const response = await UserService.changePassword(payload, authId);
+        res.status(StatusCodes.OK).json(response);
+    }
+
+        public static async setTransactionPin(req: Request, res: Response) {
+        const payload: setTransactionPinDto = req.body;
+        const authId = "req.user.authid";
+        // const authId = req.user.authid;
+        const response = await UserService.setTransactionPin(payload, authId);
         res.status(StatusCodes.OK).json(response);
     }
 }

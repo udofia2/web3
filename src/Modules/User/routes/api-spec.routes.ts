@@ -600,3 +600,47 @@
  *                   type: string
  *                   example: "Something went wrong"
  */
+
+
+// ::::::::::::::::::::::::: Set Transaction PIN :::::::::::::::::::::::::
+/**
+ * @swagger
+ * /user/set-transaction-pin:
+ *   put:
+ *     summary: Set transaction PIN
+ *     description: Sets a secure 4-digit PIN for transaction authorization. PIN is encrypted before storage.
+ *     tags:
+ *       - User Management
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               pin:
+ *                 type: string
+ *                 pattern: '^\\d{4}$'
+ *                 description: 4-digit numeric PIN
+ *                 example: "1234"
+ *               confirmPin:
+ *                 type: string
+ *                 pattern: '^\\d{4}$'
+ *                 description: Must match the PIN
+ *                 example: "1234"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: Current account password for verification
+ *                 example: "CurrentPass123!"
+ *             required: ["pin", "confirmPin", "password"]
+ *     responses:
+ *       200:
+ *         description: PIN set successfully
+ *       400:
+ *         description: Validation errors
+ *       401:
+ *         description: Invalid password or authentication
+ */
