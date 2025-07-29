@@ -26,6 +26,7 @@ class AuthRepository implements IAuthRepository{
             }
         }) as Auth;
     }
+
 }
 
 export default AuthRepository.getInstance()

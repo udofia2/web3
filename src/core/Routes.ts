@@ -2,6 +2,8 @@ import { Application } from "express";
 import {use} from "./global/middleware/use.middleware";
 import {Auth} from "./global/middleware/auth.guard";
 import AuthRoutes from "../Modules/Auth/routes/auth.routes"
+import UserRoutes from "../Modules/User/routes/user.routes"
+
 import {SwaggerDocs} from "@core/swagger/docs.swagger";
 
 export class SetupRoutes {
@@ -18,6 +20,8 @@ export class SetupRoutes {
             }
 
             app.use(`${SetupRoutes.apiPrefix}/auth`, AuthRoutes)
+            app.use(`${SetupRoutes.apiPrefix}/user`, UserRoutes)
+
             // app.use(`${SetupRoutes.apiPrefix}/explorer`, ExplorerRoutes)
             // app.use(`${SetupRoutes.apiPrefix}/webhook`, WebhookRoutes)
 

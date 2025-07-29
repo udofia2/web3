@@ -109,7 +109,8 @@
     "src/**/*.ejs",
     "bin/*.ts",
     "src/**/*.json",
-    "index.ts"
+    "index.ts",
+    "src/core/gobal/config"
   ],
   "exclude": [
     "dist",
@@ -119,3 +120,5 @@
     "./node_modules/*"
   ],
 }
+
+

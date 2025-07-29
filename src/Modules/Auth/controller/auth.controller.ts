@@ -15,4 +15,5 @@ export class AuthController {
         const response = await AuthService.register(payload);
         res.status(StatusCodes.CREATED).json(response);
     }
+
 }

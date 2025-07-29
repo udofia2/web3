@@ -16,7 +16,9 @@ export interface resgisterDto {
     password: string;
 }
 
+
 export interface IAuthRepository {
     findById(id: string): Promise<any>;
     findByEmail(email: string): Promise<any>;
+    
 }
