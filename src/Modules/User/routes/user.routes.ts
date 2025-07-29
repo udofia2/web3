@@ -38,9 +38,28 @@ router.route("/change-password")
 
 router.route("/set-transaction-pin")
     .put([
-        throttle(3, 15), // More restrictive rate limiting for PIN
+        throttle(3, 15), 
         use(Auth.guard),
         validateSchema(UserValidator.setTransactionPinSchema)
     ], use(UserController.setTransactionPin));
+
+    router.route("/request-pin-reset")
+    .post([
+        throttle(3, 15),
+        use(Auth.guard),
+        validateSchema(UserValidator.requestPinResetSchema)
+    ], use(UserController.requestPinReset));
+
+router.route("/verify-pin-reset-otp")
+    .post([
+        throttle(5, 15), 
+        validateSchema(UserValidator.verifyPinResetOtpSchema)
+    ], use(UserController.verifyPinResetOtp));
+
+router.route("/reset-transaction-pin")
+    .put([
+        throttle(3, 15), 
+        validateSchema(UserValidator.resetTransactionPinSchema)
+    ], use(UserController.resetTransactionPin));
 
 export default router;

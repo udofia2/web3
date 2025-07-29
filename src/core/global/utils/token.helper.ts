@@ -12,10 +12,14 @@ class TokenHelper {
         const session = randomUUID().toString();
         
         const enccryptedToken = AESCrypto.encrypt(otp.toString());
+
+                // Set TTL based on token type
+        const ttl = data.type === 'pin_reset' ? 600 : undefined; // 10 minutes for PIN reset
+
         await RedisManager.set(session, JSON.stringify({
             token: enccryptedToken,
             ...data
-        }))
+        }), ttl)
 
         return {
             token: otp,

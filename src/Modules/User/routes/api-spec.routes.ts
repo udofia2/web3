@@ -644,3 +644,104 @@
  *       401:
  *         description: Invalid password or authentication
  */
+
+
+// ::::::::::::::::::::::::: Request PIN Reset :::::::::::::::::::::::::
+/**
+ * @swagger
+ * /user/request-pin-reset:
+ *   post:
+ *     summary: Request PIN reset OTP
+ *     description: Initiates PIN reset process by sending OTP to registered email or phone
+ *     tags:
+ *       - User Management
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               method:
+ *                 type: string
+ *                 enum: [email, sms]
+ *                 example: "email"
+ *             required: ["method"]
+ *     responses:
+ *       200:
+ *         description: OTP sent successfully
+ *       400:
+ *         description: Validation errors
+ *       401:
+ *         description: Authentication required
+ */
+
+// ::::::::::::::::::::::::: Verify PIN Reset OTP :::::::::::::::::::::::::
+/**
+ * @swagger
+ * /user/verify-pin-reset-otp:
+ *   post:
+ *     summary: Verify PIN reset OTP
+ *     description: Verifies the OTP sent for PIN reset
+ *     tags:
+ *       - User Management
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sessionId:
+ *                 type: string
+ *                 example: "uuid-session-id"
+ *               otp:
+ *                 type: string
+ *                 pattern: '^\\d{6}$'
+ *                 example: "123456"
+ *             required: ["sessionId", "otp"]
+ *     responses:
+ *       200:
+ *         description: OTP verified successfully
+ *       401:
+ *         description: Invalid or expired OTP
+ */
+
+// ::::::::::::::::::::::::: Reset Transaction PIN :::::::::::::::::::::::::
+/**
+ * @swagger
+ * /user/reset-transaction-pin:
+ *   put:
+ *     summary: Reset transaction PIN
+ *     description: Resets transaction PIN after OTP verification
+ *     tags:
+ *       - User Management
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sessionId:
+ *                 type: string
+ *                 example: "uuid-session-id"
+ *               newPin:
+ *                 type: string
+ *                 pattern: '^\\d{4}$'
+ *                 example: "1234"
+ *               confirmPin:
+ *                 type: string
+ *                 pattern: '^\\d{4}$'
+ *                 example: "1234"
+ *             required: ["sessionId", "newPin", "confirmPin"]
+ *     responses:
+ *       200:
+ *         description: PIN reset successfully
+ *       400:
+ *         description: Validation errors
+ *       401:
+ *         description: Invalid session or OTP not verified
+ */
